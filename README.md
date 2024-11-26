@@ -11,6 +11,10 @@
 
 Sticky Notes React Demo
 
+<img width="500" alt="shreenshot" src="https://github.com/user-attachments/assets/20e0ffc2-f598-4453-a4a6-823a00e75754">
+
+[Live demo](https://roman-shhh.github.io/sticky-notes-react-demo/)
+
 ### Built With
 
 [React](https://react.dev)
