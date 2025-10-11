@@ -1,24 +1,26 @@
 import { useContext } from "react";
-import { NotesContext } from "../context/NotesContext";
+import PropTypes from "prop-types";
+import { NotesContext } from "../context/NotesContextContext";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import colors from "../assets/colors.json"
 
 const Color = ({ color, noteId }) => {
-  const { notes, setNotes } = useContext(NotesContext)
+  const { setNotes } = useContext(NotesContext)
   const { saveToLocasStorage } = useLocalStorage()
 
   const changeColor = () => {
-    const currentNoteIndex = notes.findIndex((note) => note.$id === noteId);
-
-    const updatedNote = {
-      ...notes[currentNoteIndex],
-      color: color,
-    };
-
-    const newNotes = [...notes];
-    newNotes[currentNoteIndex] = updatedNote;
-    setNotes(newNotes);
-    saveToLocasStorage(newNotes)
+    setNotes(prevNotes => {
+      const currentNoteIndex = prevNotes.findIndex((note) => note.$id === noteId);
+      if (currentNoteIndex === -1) return prevNotes;
+      const updatedNote = {
+        ...prevNotes[currentNoteIndex],
+        color: color,
+      };
+      const newNotes = [...prevNotes];
+      newNotes[currentNoteIndex] = updatedNote;
+      saveToLocasStorage(newNotes);
+      return newNotes;
+    });
   };
 
   return (
@@ -30,6 +32,11 @@ const Color = ({ color, noteId }) => {
       ></div>
     </div>
   );
+};
+
+Color.propTypes = {
+  color: PropTypes.string.isRequired,
+  noteId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
 export default Color

@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
+import PropTypes from 'prop-types';
 import Trash from '../icons/Trash'
 import Spinner from '../icons/Spinner'
 import { setNewOffset, autoGrow } from '../utils.js'
@@ -9,7 +10,7 @@ const NoteCard = ({ note, setNotePosition, updateNoteBody, deleteNote, setZIndex
   const [position, setPositon] = useState(note.position);
   const [saving, setSaving] = useState(false);
 
-  let mouseStartPos = { x: 0, y: 0 };
+  const mouseStartPos = useRef({ x: 0, y: 0 });
 
   const cardRef = useRef(null);
   const textAreaRef = useRef(null);
@@ -20,18 +21,21 @@ const NoteCard = ({ note, setNotePosition, updateNoteBody, deleteNote, setZIndex
     if (!note.body) {
       textAreaRef.current.focus()
     }
-  }, []);
+  }, [note.body, textAreaRef]);
 
-  useEffect(() => {
-    setNotePosition({ id: note.$id, position })
-  }, [position]);
+
+  // Вместо useEffect вызываем setNotePosition только при изменении позиции
+  const handlePositionChange = (newPosition) => {
+    setPositon(newPosition);
+    setNotePosition({ id: note.$id, position: newPosition });
+  };
 
   const mouseDown = (e) => {
     setZIndex(note.$id);
 
     if (e.target.className === "card-header") {
-      mouseStartPos.x = e.clientX;
-      mouseStartPos.y = e.clientY;
+      mouseStartPos.current.x = e.clientX;
+      mouseStartPos.current.y = e.clientY;
 
       document.addEventListener("mousemove", mouseMove);
       document.addEventListener("mouseup", mouseUp);
@@ -40,15 +44,15 @@ const NoteCard = ({ note, setNotePosition, updateNoteBody, deleteNote, setZIndex
 
   const mouseMove = (e) => {
     let mouseMoveDir = {
-      x: mouseStartPos.x - e.clientX,
-      y: mouseStartPos.y - e.clientY,
+      x: mouseStartPos.current.x - e.clientX,
+      y: mouseStartPos.current.y - e.clientY,
     };
 
-    mouseStartPos.x = e.clientX;
-    mouseStartPos.y = e.clientY;
+    mouseStartPos.current.x = e.clientX;
+    mouseStartPos.current.y = e.clientY;
 
     const newPosition = setNewOffset(cardRef.current, mouseMoveDir);
-    setPositon(() => newPosition);
+    handlePositionChange(newPosition);
   };
 
   const mouseUp = () => {
@@ -129,5 +133,23 @@ const NoteCard = ({ note, setNotePosition, updateNoteBody, deleteNote, setZIndex
     </div>
   )
 }
+
+
+NoteCard.propTypes = {
+  note: PropTypes.shape({
+    $id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    body: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired,
+    position: PropTypes.shape({
+      x: PropTypes.number.isRequired,
+      y: PropTypes.number.isRequired,
+    }).isRequired,
+    zIndex: PropTypes.number.isRequired,
+  }).isRequired,
+  setNotePosition: PropTypes.func.isRequired,
+  updateNoteBody: PropTypes.func.isRequired,
+  deleteNote: PropTypes.func.isRequired,
+  setZIndex: PropTypes.func.isRequired,
+};
 
 export default NoteCard

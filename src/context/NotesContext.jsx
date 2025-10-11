@@ -1,10 +1,11 @@
-import { createContext } from "react";
+import { NotesContext } from "./NotesContextContext";
+import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import Spinner from "../icons/Spinner";
 import { useLocalStorage } from '../hooks/useLocalStorage.js';
 import { fakeData } from '../assets/fakeData.js'
 
-export const NotesContext = createContext();
+
 
 const NotesProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
@@ -13,22 +14,20 @@ const NotesProvider = ({ children }) => {
   const { getLocalStorage, saveToLocasStorage } = useLocalStorage()
 
   useEffect(() => {
-      init();
-  }, []);
-
-  const init = async () => {
-    const lsData = getLocalStorage()
-    if (!lsData) {
-      setNotes(() => [...fakeData])
-      saveToLocasStorage(fakeData)
-    } else {
-      setNotes(() => [...JSON.parse(lsData)])
-    }
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-  };
+    const init = async () => {
+      const lsData = getLocalStorage();
+      if (!lsData) {
+        setNotes(() => [...fakeData]);
+        saveToLocasStorage(fakeData);
+      } else {
+        setNotes(() => [...JSON.parse(lsData)]);
+      }
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    };
+    void init();
+  }, [getLocalStorage, saveToLocasStorage]);
 
   const contextData = { notes, setNotes };
 
@@ -51,4 +50,9 @@ const NotesProvider = ({ children }) => {
     </NotesContext.Provider>
   );
 };
+
+NotesProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
 export default NotesProvider;

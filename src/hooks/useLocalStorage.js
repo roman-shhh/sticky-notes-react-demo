@@ -5,13 +5,13 @@ export const useLocalStorage = () => {
 
   const getLocalStorage = useCallback(() => {
     return localStorage.getItem(lsNameData)
-  }, []);
+  }, [lsNameData]);
 
   const saveToLocasStorage = useCallback((data) => {
     if (data) {
       localStorage.setItem(lsNameData, JSON.stringify(data))
     }
-  }, []);
+  }, [lsNameData]);
 
   return { getLocalStorage, saveToLocasStorage }
 }
