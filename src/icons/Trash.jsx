@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 const Trash = ({ size = "24" }) => {
   return (
       <svg
@@ -16,6 +18,11 @@ const Trash = ({ size = "24" }) => {
           ></path>
       </svg>
   );
+};
+
+
+Trash.propTypes = {
+    size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default Trash

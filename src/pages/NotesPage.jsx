@@ -1,5 +1,5 @@
 import { useRef, useCallback, useContext } from "react";
-import { NotesContext } from "../context/NotesContext";
+import { NotesContext } from "../context/NotesContextContext";
 import NoteCard from '../components/NoteCard.jsx'
 import { useLocalStorage } from '../hooks/useLocalStorage.js'
 import Plus from "../icons/Plus.jsx";
@@ -21,7 +21,7 @@ const NotesPage = () => {
       setNotes(() => data)
       saveToLocasStorage(data)
     }
-  }, [notes]);
+  }, [notes, setNotes, saveToLocasStorage]);
 
   const updateNoteBody = useCallback(({ id, body }) => {
     if (!id || body === undefined) { return }
@@ -32,7 +32,7 @@ const NotesPage = () => {
       setNotes(() => data)
       saveToLocasStorage(data)
     }
-  }, [notes]);
+  }, [notes, setNotes, saveToLocasStorage]);
 
   const deleteNote = useCallback((id) => {
     if (!id) { return }
@@ -43,7 +43,7 @@ const NotesPage = () => {
       setNotes(() => data)
       saveToLocasStorage(data)
     }
-  }, [notes]);
+  }, [notes, setNotes, saveToLocasStorage]);
 
   const setZIndex = useCallback((id) => {
     const newNotes = [...notes]
@@ -56,7 +56,7 @@ const NotesPage = () => {
     })
     setNotes(() => newNotes)
     saveToLocasStorage(newNotes)
-  }, [notes]);
+  }, [notes, setNotes, saveToLocasStorage]);
 
   const addNote = useCallback(() => {
     const id = Date.now();
@@ -78,7 +78,7 @@ const NotesPage = () => {
     const newNotes = [newNote, ...notes]
     setNotes(() => newNotes);
     saveToLocasStorage(newNotes)
-  }, [notes]);
+  }, [notes, setNotes, saveToLocasStorage, startingPos]);
 
   return (
     <div>

@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 const Plus = ({ size = "24", color = "#FFFFFF" }) => {
   return (
     <svg
@@ -12,6 +14,12 @@ const Plus = ({ size = "24", color = "#FFFFFF" }) => {
       <path strokeLinecap="round" d="M18 12H6M12 6v12"></path>
     </svg>
   );
+};
+
+
+Plus.propTypes = {
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  color: PropTypes.string,
 };
 
 export default Plus

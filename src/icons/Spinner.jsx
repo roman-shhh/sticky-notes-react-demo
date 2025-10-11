@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 const Spinner = ({ color = "#fff", size = "20" }) => {
   return (
     <svg
@@ -17,6 +19,12 @@ const Spinner = ({ color = "#fff", size = "20" }) => {
         ></path>
     </svg>
   );
+};
+
+
+Spinner.propTypes = {
+  color: PropTypes.string,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default Spinner;
